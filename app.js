@@ -1,11 +1,5 @@
-/**
- * Book Ledger Frontend Script
- * - Replace WEB_APP_URL with your deployed Google Apps Script Web App URL.
- * - Handles: form validation, fetch GET/POST, rendering table, filters, summaries, CSV export, print.
- */
-
 /* ==================== CONFIG ===================== */
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzgpJyLKurPmewTZzYZop2uR5JC725gAJAQj3_7iekSAUnEy8fhOpJRBhHYV4wnPppKkw/exec"; // <-- Replace this
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwi08M5qkddmfDcOMl7uH0cYWfUXAUpHtHh_4-_I0dMdXIUgxwWZoigAGcK8MF7Bi3Xvg/exec"; // Replace with your Web App URL
 
 /* ==================== State ======================= */
 let transactions = [];
@@ -40,15 +34,15 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchTransactions();
 });
 
-/* ---------------- Set default date ---------------- */
+/* ---------------- set today's date as default ---------------- */
 function setDefaultDate(){
   selectors.date.value = new Date().toISOString().slice(0,10);
 }
 
-/* ---------------- Bind UI events ---------------- */
+/* ---------------- bind UI events ---------------- */
 function bindEvents(){
   selectors.form.addEventListener("submit", onFormSubmit);
-  selectors.resetBtn.addEventListener("click", () => selectors.form.reset());
+  selectors.resetBtn.addEventListener("click", () => selectors.form.reset() );
   selectors.applyFilters.addEventListener("click", applyFilters);
   selectors.clearFilters.addEventListener("click", clearFilters);
   selectors.exportCsv.addEventListener("click", exportCSV);
@@ -57,9 +51,14 @@ function bindEvents(){
 
 /* ==================== Fetch / Post ===================== */
 async function fetchTransactions(){
+  if (!WEB_APP_URL) {
+    alert("Please set the WEB_APP_URL in app.js");
+    return;
+  }
+
   try {
-    const res = await fetch(`${WEB_APP_URL}?action=getAll`);
-    if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+    const res = await fetch(WEB_APP_URL + "?action=getAll");
+    if (!res.ok) throw new Error(`Network error: ${res.status}`);
     const data = await res.json();
     transactions = data.map(row => ({
       Date: row.Date,
@@ -74,8 +73,8 @@ async function fetchTransactions(){
     populateFilters();
     calculateSummary(transactions);
   } catch (err) {
-    console.error("Error fetching transactions:", err);
-    alert("Error fetching transactions. Check your Web App URL and deployment permissions.");
+    console.error("Fetch error:", err);
+    alert("Failed to fetch transactions. Make sure the Web App URL is correct, deployed as 'Anyone, even anonymous', and your browser allows network requests.");
   }
 }
 
@@ -87,17 +86,18 @@ async function postTransaction(payload){
       body: JSON.stringify(payload)
     });
     const rjson = await res.json();
-    if (!res.ok) throw new Error(rjson.message || "POST failed");
+    if (!res.ok || rjson.status === "error") throw new Error(rjson.message || "POST failed");
     return rjson;
   } catch (err) {
-    console.error("Error posting transaction:", err);
+    console.error("POST error:", err);
     throw err;
   }
 }
 
-/* ==================== Form Handling ===================== */
+/* ==================== Form handling ===================== */
 function onFormSubmit(e){
   e.preventDefault();
+
   const date = selectors.date.value;
   const account = selectors.account.value.trim();
   const type = selectors.type.value;
@@ -106,7 +106,7 @@ function onFormSubmit(e){
 
   const validation = validateForm({date, account, type, amount});
   if (!validation.ok){
-    alert(validation.message);
+    alert("Validation error: " + validation.message);
     return;
   }
 
@@ -127,7 +127,9 @@ function onFormSubmit(e){
       setDefaultDate();
       fetchTransactions();
     })
-    .catch(err => alert("Failed to add transaction: " + (err.message || err)))
+    .catch(err => {
+      alert("Failed to add transaction: " + (err.message || err));
+    })
     .finally(() => {
       selectors.submitBtn.disabled = false;
       selectors.submitBtn.textContent = "Add Transaction";
@@ -137,8 +139,8 @@ function onFormSubmit(e){
 function validateForm({date, account, type, amount}){
   if (!date) return {ok:false, message:"Date is required"};
   if (!account) return {ok:false, message:"Account name is required"};
-  if (!type || !["Debit","Credit"].includes(type)) return {ok:false, message:"Select Debit or Credit"};
-  if (!amount || isNaN(amount) || parseFloat(amount)<=0) return {ok:false, message:"Amount must be a positive number"};
+  if (!type || (type !== "Debit" && type !== "Credit")) return {ok:false, message:"Select Debit or Credit"};
+  if (!amount || isNaN(amount) || parseFloat(amount) <= 0) return {ok:false, message:"Amount must be a positive number"};
   return {ok:true};
 }
 
@@ -158,8 +160,7 @@ function renderTable(data){
       <td>${escapeHtml(tx.Type)}</td>
       <td class="right">${formatCurrency(tx.Amount)}</td>
       <td>${escapeHtml(tx.Description)}</td>
-    </tr>
-  `).join("");
+    </tr>`).join("");
 }
 
 function populateAccountDatalist(){
@@ -175,59 +176,58 @@ function populateFilters(){
 /* ==================== Summary ===================== */
 function calculateSummary(data){
   let totalDebits=0, totalCredits=0;
-  data.forEach(tx => {
-    if (tx.Type==="Debit") totalDebits += Number(tx.Amount) || 0;
-    if (tx.Type==="Credit") totalCredits += Number(tx.Amount) || 0;
-  });
-  selectors.totalDebits.textContent = formatCurrency(totalDebits);
-  selectors.totalCredits.textContent = formatCurrency(totalCredits);
-  selectors.netWealth.textContent = formatCurrency(totalDebits - totalCredits);
+  for (const tx of data){
+    if (tx.Type==="Debit") totalDebits+=Number(tx.Amount)||0;
+    if (tx.Type==="Credit") totalCredits+=Number(tx.Amount)||0;
+  }
+  selectors.totalDebits.textContent=formatCurrency(totalDebits);
+  selectors.totalCredits.textContent=formatCurrency(totalCredits);
+  selectors.netWealth.textContent=formatCurrency(totalDebits - totalCredits);
 }
 
-/* ==================== Filtering ===================== */
+/* ==================== Filters ===================== */
 function applyFilters(){
+  let filtered = transactions.slice();
   const acc = selectors.filterAccount.value;
   const type = selectors.filterType.value;
   const from = selectors.filterFrom.value;
   const to = selectors.filterTo.value;
 
-  let filtered = transactions.slice();
-  if (acc && acc!=="All") filtered = filtered.filter(t => t.Account===acc);
-  if (type && type!=="All") filtered = filtered.filter(t => t.Type===type);
-  if (from) filtered = filtered.filter(t => new Date(t.Date) >= new Date(from));
-  if (to) filtered = filtered.filter(t => new Date(t.Date) <= new Date(to));
+  if(acc && acc!=="All") filtered=filtered.filter(t=>t.Account===acc);
+  if(type && type!=="All") filtered=filtered.filter(t=>t.Type===type);
+  if(from) filtered=filtered.filter(t=>new Date(t.Date)>=new Date(from));
+  if(to) filtered=filtered.filter(t=>new Date(t.Date)<=new Date(to));
 
   renderTable(filtered);
   calculateSummary(filtered);
 }
 
 function clearFilters(){
-  selectors.filterAccount.value = "All";
-  selectors.filterType.value = "All";
-  selectors.filterFrom.value = "";
-  selectors.filterTo.value = "";
+  selectors.filterAccount.value="All";
+  selectors.filterType.value="All";
+  selectors.filterFrom.value="";
+  selectors.filterTo.value="";
   renderTable(transactions);
   calculateSummary(transactions);
 }
 
-/* ==================== CSV Export ===================== */
+/* ==================== Export CSV ===================== */
 function exportCSV(){
-  const rows = [["Date","Account","Type","Amount","Description"]];
-  const trs = Array.from(selectors.ledgerBody.querySelectorAll("tr"));
-  trs.forEach(tr => {
-    const tds = Array.from(tr.querySelectorAll("td"));
-    if (tds.length!==5) return;
-    rows.push(tds.map(td => td.textContent.trim()));
+  if(!transactions.length){ alert("No data to export."); return; }
+
+  const rows=[["Date","Account","Type","Amount","Description"]];
+  Array.from(selectors.ledgerBody.querySelectorAll("tr")).forEach(tr=>{
+    const tds=Array.from(tr.querySelectorAll("td"));
+    if(tds.length!==5) return;
+    rows.push(tds.map(td=>td.textContent.trim()));
   });
 
-  if (rows.length<=1){ alert("No data to export."); return; }
-
-  const csv = rows.map(r => r.map(c=>`"${c.replace(/"/g,'""')}"`).join(",")).join("\n");
-  const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `ledger_export_${new Date().toISOString().slice(0,10)}.csv`;
+  const csvContent = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob=new Blob([csvContent],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=`ledger_export_${new Date().toISOString().slice(0,10)}.csv`;
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -235,12 +235,5 @@ function exportCSV(){
 }
 
 /* ==================== Helpers ===================== */
-function formatCurrency(num){
-  return Number(num||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-}
-
-function escapeHtml(unsafe){
-  if (!unsafe) return "";
-  return String(unsafe).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-}
-
+function formatCurrency(num){ return Number(num||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function escapeHtml(str){ if(str===undefined||str===null) return ""; return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]); }
