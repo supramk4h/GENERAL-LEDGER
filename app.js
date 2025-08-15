@@ -6,7 +6,7 @@
 
 /* ==================== CONFIG ===================== */
 // TODO: Replace this with your Apps Script Web App URL after deploying the script
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzT1DiC0tXDJvtWgeU6S6cdwPy5z2LIduyMs7tvtwQe98omYJG9ojIYtktKBw9acP0RlA/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyVjNenej8DX-Nw7j9WqLOO-yLXEJErB6eqMh5eBGP8Wld_sTkteGtzJmMeQpnKVcMXOw/exec";
 
 /* ==================== State ======================= */
 let transactions = []; // will hold all transactions fetched from Google Sheets
@@ -64,8 +64,8 @@ function bindEvents(){
  * Expects the Web App to return JSON array of transactions.
  */
 async function fetchTransactions(){
-  if (!WEB_APP_URL || WEB_APP_URL.includes("https://script.google.com/macros/s/AKfycbzT1DiC0tXDJvtWgeU6S6cdwPy5z2LIduyMs7tvtwQe98omYJG9ojIYtktKBw9acP0RlA/exec")){
-    alert("https://script.google.com/macros/s/AKfycbzT1DiC0tXDJvtWgeU6S6cdwPy5z2LIduyMs7tvtwQe98omYJG9ojIYtktKBw9acP0RlA/exec");
+  if (!WEB_APP_URL || WEB_APP_URL.includes("https://script.google.com/macros/s/AKfycbyVjNenej8DX-Nw7j9WqLOO-yLXEJErB6eqMh5eBGP8Wld_sTkteGtzJmMeQpnKVcMXOw/exec")){
+    alert("https://script.google.com/macros/s/AKfycbyVjNenej8DX-Nw7j9WqLOO-yLXEJErB6eqMh5eBGP8Wld_sTkteGtzJmMeQpnKVcMXOw/exec");
     return;
   }
 
@@ -300,3 +300,4 @@ function escapeHtml(unsafe) {
     return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m];
   });
 }
+
