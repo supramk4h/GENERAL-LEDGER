@@ -1,5 +1,5 @@
 /* ==================== CONFIG ===================== */
-const WEB_APP_URL = "https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbwi08M5qkddmfDcOMl7uH0cYWfUXAUpHtHh_4-_I0dMdXIUgxwWZoigAGcK8MF7Bi3Xvg/exec"; // Replace with your Web App URL
+const WEB_APP_URL = "https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbxi7g8SVmn0j7lPsjNPtq6KgS57TtW7LS5LEnJvrTDducMjU8-m5Fr0XMkq_0xrAqljGA/exec"; // Replace with your Web App URL
 
 /* ==================== State ======================= */
 let transactions = [];
@@ -237,4 +237,3 @@ function exportCSV(){
 /* ==================== Helpers ===================== */
 function formatCurrency(num){ return Number(num||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function escapeHtml(str){ if(str===undefined||str===null) return ""; return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]); }
-
