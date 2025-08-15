@@ -1,120 +1,81 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Book Ledger — Small Business</title>
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Book Ledger — GitHub Pages</title>
+<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="topbar">
-    <h1>Book Ledger</h1>
-    <p class="subtitle">Professional ledger backed by Google Sheets</p>
-  </header>
+<header class="topbar">
+  <h1>Book Ledger</h1>
+  <p class="subtitle">Professional ledger with Google Sheets backend</p>
+</header>
 
-  <main class="container">
-    <!-- Transaction Form -->
-    <section class="form-section card">
-      <h2>New Transaction</h2>
-      <form id="transactionForm" novalidate>
-        <div class="grid">
-          <label>
-            Date
-            <input type="date" id="date" required />
-          </label>
-          <label>
-            Account Name
-            <input type="text" id="account" list="accountsList" placeholder="Cash, Sales, Rent" required />
-            <datalist id="accountsList"></datalist>
-          </label>
-          <label>
-            Transaction Type
-            <select id="type" required>
-              <option value="">Select type</option>
-              <option value="Debit">Debit</option>
-              <option value="Credit">Credit</option>
-            </select>
-          </label>
-          <label>
-            Amount
-            <input type="number" id="amount" min="0.01" step="0.01" placeholder="0.00" required />
-          </label>
-          <label class="fullwidth">
-            Description
-            <input type="text" id="description" placeholder="Optional" />
-          </label>
-        </div>
-        <div class="actions">
-          <button type="submit" id="submitBtn" class="btn primary">Add Transaction</button>
-          <button type="button" id="resetBtn" class="btn">Clear</button>
-        </div>
-      </form>
-    </section>
-
-    <!-- Filters & Actions -->
-    <section class="filter-section card">
-      <h2>Filters & Actions</h2>
-      <div class="filters">
-        <label>
-          Account
-          <select id="filterAccount"><option value="All">All</option></select>
-        </label>
-        <label>
-          Type
-          <select id="filterType">
-            <option value="All">All</option>
+<main class="container">
+  <section class="form-section card">
+    <h2>New Transaction</h2>
+    <form id="transactionForm" novalidate>
+      <div class="grid">
+        <label>Date<input type="date" id="date" required /></label>
+        <label>Account Name<input type="text" id="account" list="accountsList" placeholder="Cash, Sales, Rent" required /><datalist id="accountsList"></datalist></label>
+        <label>Transaction Type
+          <select id="type" required>
+            <option value="">Select type</option>
             <option value="Debit">Debit</option>
             <option value="Credit">Credit</option>
           </select>
         </label>
-        <label>
-          From
-          <input type="date" id="filterFrom" />
-        </label>
-        <label>
-          To
-          <input type="date" id="filterTo" />
-        </label>
-        <div class="filter-actions">
-          <button id="applyFilters" class="btn">Apply</button>
-          <button id="clearFilters" class="btn">Clear</button>
-        </div>
+        <label>Amount<input type="number" id="amount" min="0.01" step="0.01" required placeholder="0.00" /></label>
+        <label class="fullwidth">Description<input type="text" id="description" placeholder="Short description (optional)" /></label>
       </div>
-      <div class="export-actions">
-        <button id="exportCsv" class="btn">Export CSV</button>
-        <button id="printBtn" class="btn">Print / Save PDF</button>
+      <div class="actions">
+        <button type="submit" id="submitBtn" class="btn primary">Add Transaction</button>
+        <button type="button" id="resetBtn" class="btn">Clear</button>
       </div>
-    </section>
+    </form>
+  </section>
 
-    <!-- Ledger Table -->
-    <section class="ledger-section card">
-      <h2>Ledger</h2>
-      <div class="summary">
-        <div>Total Debits: <span id="totalDebits">0.00</span></div>
-        <div>Total Credits: <span id="totalCredits">0.00</span></div>
-        <div class="net">Net Wealth (Debits - Credits): <span id="netWealth">0.00</span></div>
+  <section class="filter-section card">
+    <h2>Filters & Actions</h2>
+    <div class="filters">
+      <label>Account<select id="filterAccount"><option value="All">All</option></select></label>
+      <label>Type<select id="filterType"><option value="All">All</option><option value="Debit">Debit</option><option value="Credit">Credit</option></select></label>
+      <label>From<input type="date" id="filterFrom" /></label>
+      <label>To<input type="date" id="filterTo" /></label>
+      <div class="filter-actions">
+        <button id="applyFilters" class="btn">Apply</button>
+        <button id="clearFilters" class="btn">Clear</button>
       </div>
-      <div class="table-wrap">
-        <table id="ledgerTable">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Account</th>
-              <th>Type</th>
-              <th class="right">Amount</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody id="ledgerBody"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+    </div>
+    <div class="export-actions">
+      <button id="exportCsv" class="btn">Export CSV</button>
+      <button id="printBtn" class="btn">Print / Save as PDF</button>
+    </div>
+  </section>
 
-  <footer class="footer">
-    <small>Built for small businesses. Google Sheet backend (your account)</small>
-  </footer>
+  <section class="ledger-section card">
+    <h2>Ledger</h2>
+    <div class="summary">
+      <div>Total Debits: <span id="totalDebits">0.00</span></div>
+      <div>Total Credits: <span id="totalCredits">0.00</span></div>
+      <div class="net">Net Wealth: <span id="netWealth">0.00</span></div>
+    </div>
+    <div class="table-wrap">
+      <table id="ledgerTable">
+        <thead>
+          <tr><th>Date</th><th>Account</th><th>Type</th><th>Amount</th><th>Description</th></tr>
+        </thead>
+        <tbody id="ledgerBody"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
 
-  <script src="app.js"></script>
+<footer class="footer">
+  <small>Built for small businesses. Backed by your Google Sheet</small>
+</footer>
+
+<script src="app.js"></script>
 </body>
 </html>
