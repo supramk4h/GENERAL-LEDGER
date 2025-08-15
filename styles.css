@@ -1,0 +1,95 @@
+:root{
+  --bg:#f6f8fb;
+  --card:#ffffff;
+  --accent:#2b6ef6;
+  --muted:#6b7280;
+  --success:#0f5132;
+  --danger:#842029;
+  --radius:12px;
+  --pad:16px;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:#111827;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+.topbar{
+  background:linear-gradient(90deg,var(--accent),#4f8cff);
+  color:white;
+  padding:18px var(--pad);
+  border-bottom-left-radius:16px;
+  border-bottom-right-radius:16px;
+}
+.topbar h1{margin:0;font-size:20px}
+.topbar .subtitle{margin:4px 0 0;opacity:.9;font-size:13px}
+
+.container{
+  padding:18px;
+  width:1100px;
+  max-width:calc(100% - 32px);
+  margin:12px auto;
+  display:grid;
+  grid-template-columns: 360px 1fr;
+  gap:16px;
+}
+
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:14px;
+  box-shadow: 0 6px 20px rgba(14,30,37,0.06);
+}
+
+.form-section h2, .filter-section h2, .ledger-section h2 {margin:0 0 8px 0}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.grid label{display:flex;flex-direction:column;font-size:13px}
+.grid input, .grid select{
+  margin-top:6px;
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #e6e9ef;
+  font-size:14px;
+}
+
+.fullwidth{grid-column:1 / -1}
+
+.actions{display:flex;gap:8px;margin-top:12px}
+.btn{
+  padding:8px 12px;border-radius:8px;border:none;background:#eef2ff;color:#0b2f8a;cursor:pointer;font-weight:600;
+}
+.btn.primary{background:var(--accent);color:white}
+
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filters label{display:flex;flex-direction:column;font-size:13px}
+.filter-actions{display:flex;gap:8px;margin-left:auto}
+
+.export-actions{display:flex;gap:8px;margin-top:12px}
+
+.table-wrap{overflow:auto;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+thead th{background:#f1f5f9;padding:10px;text-align:left;position:sticky;top:0}
+tbody td{padding:10px;border-top:1px solid #f1f3f5}
+.right{text-align:right}
+.summary{display:flex;justify-content:space-between;gap:12px;padding:10px 0}
+.summary div{font-weight:700}
+.summary .net{color:var(--accent)}
+
+.footer{padding:12px;text-align:center;color:var(--muted);font-size:13px;margin-top:auto}
+
+/* responsive */
+@media (max-width:980px){
+  .container{grid-template-columns:1fr; padding:12px}
+}
