@@ -3,16 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Book Ledger — Ittifaq / Small Business</title>
+  <title>Book Ledger — Small Business</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="topbar">
     <h1>Book Ledger</h1>
-    <p class="subtitle">Simple, professional ledger with Google Sheets backend</p>
+    <p class="subtitle">Professional ledger backed by Google Sheets</p>
   </header>
 
   <main class="container">
+    <!-- Transaction Form -->
     <section class="form-section card">
       <h2>New Transaction</h2>
       <form id="transactionForm" novalidate>
@@ -21,13 +22,11 @@
             Date
             <input type="date" id="date" required />
           </label>
-
           <label>
             Account Name
-            <input type="text" id="account" list="accountsList" placeholder="e.g., Cash, Sales, Rent" required />
+            <input type="text" id="account" list="accountsList" placeholder="Cash, Sales, Rent" required />
             <datalist id="accountsList"></datalist>
           </label>
-
           <label>
             Transaction Type
             <select id="type" required>
@@ -36,18 +35,15 @@
               <option value="Credit">Credit</option>
             </select>
           </label>
-
           <label>
             Amount
-            <input type="number" id="amount" min="0.01" step="0.01" required placeholder="0.00" />
+            <input type="number" id="amount" min="0.01" step="0.01" placeholder="0.00" required />
           </label>
-
           <label class="fullwidth">
             Description
-            <input type="text" id="description" placeholder="Short description (optional)" />
+            <input type="text" id="description" placeholder="Optional" />
           </label>
         </div>
-
         <div class="actions">
           <button type="submit" id="submitBtn" class="btn primary">Add Transaction</button>
           <button type="button" id="resetBtn" class="btn">Clear</button>
@@ -55,6 +51,7 @@
       </form>
     </section>
 
+    <!-- Filters & Actions -->
     <section class="filter-section card">
       <h2>Filters & Actions</h2>
       <div class="filters">
@@ -62,7 +59,6 @@
           Account
           <select id="filterAccount"><option value="All">All</option></select>
         </label>
-
         <label>
           Type
           <select id="filterType">
@@ -71,37 +67,33 @@
             <option value="Credit">Credit</option>
           </select>
         </label>
-
         <label>
           From
           <input type="date" id="filterFrom" />
         </label>
-
         <label>
           To
           <input type="date" id="filterTo" />
         </label>
-
         <div class="filter-actions">
           <button id="applyFilters" class="btn">Apply</button>
           <button id="clearFilters" class="btn">Clear</button>
         </div>
       </div>
-
       <div class="export-actions">
         <button id="exportCsv" class="btn">Export CSV</button>
-        <button id="printBtn" class="btn">Print / Save as PDF</button>
+        <button id="printBtn" class="btn">Print / Save PDF</button>
       </div>
     </section>
 
+    <!-- Ledger Table -->
     <section class="ledger-section card">
       <h2>Ledger</h2>
-      <div class="summary" id="summary">
+      <div class="summary">
         <div>Total Debits: <span id="totalDebits">0.00</span></div>
         <div>Total Credits: <span id="totalCredits">0.00</span></div>
         <div class="net">Net Wealth (Debits - Credits): <span id="netWealth">0.00</span></div>
       </div>
-
       <div class="table-wrap">
         <table id="ledgerTable">
           <thead>
@@ -113,16 +105,14 @@
               <th>Description</th>
             </tr>
           </thead>
-          <tbody id="ledgerBody">
-            <!-- populated dynamically -->
-          </tbody>
+          <tbody id="ledgerBody"></tbody>
         </table>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <small>Built for small businesses. Backed by your Google Sheet (aounahmed4300@gmail.com)</small>
+    <small>Built for small businesses. Google Sheet backend (your account)</small>
   </footer>
 
   <script src="app.js"></script>
