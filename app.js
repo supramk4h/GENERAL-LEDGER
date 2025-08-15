@@ -5,7 +5,7 @@
  */
 
 /* ==================== CONFIG ===================== */
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzAfN6smqD-roWyzFkv5cmoQcHLDoxOsF0qpL1NGMf1H4jiujlvqZPkWkeBDs75RzMr5Q/exec"; // <-- Replace this
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzgpJyLKurPmewTZzYZop2uR5JC725gAJAQj3_7iekSAUnEy8fhOpJRBhHYV4wnPppKkw/exec"; // <-- Replace this
 
 /* ==================== State ======================= */
 let transactions = [];
@@ -243,3 +243,4 @@ function escapeHtml(unsafe){
   if (!unsafe) return "";
   return String(unsafe).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 }
+
