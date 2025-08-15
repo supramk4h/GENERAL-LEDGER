@@ -237,3 +237,4 @@ function exportCSV(){
 /* ==================== Helpers ===================== */
 function formatCurrency(num){ return Number(num||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function escapeHtml(str){ if(str===undefined||str===null) return ""; return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]); }
+
